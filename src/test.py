@@ -28,6 +28,7 @@ def test_train():
        assert isinstance(model.predict, types.MethodType), message
    except Exception:
        print "train: bad train return type"
+       return
 
    print 'train OK'
 
