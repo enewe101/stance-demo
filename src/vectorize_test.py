@@ -36,20 +36,20 @@ class Vectorizer(object):
 		word_features = find_ngram_ft_vec(word_tokens, self.word_ngram)
 		char_features = find_ngram_ft_vec(char_tokens, self.char_ngram)
 
-		total_vector = None
-		count = 0
-		for w in word_tokens:
-			if w in self.word_vectors:
-				count += 1
-				if total_vector is None:
-					total_vector = self.word_vectors[w]
-				else:
-					total_vector += self.word_vectors[w]
+		# total_vector = None
+		# count = 0
+		# for w in word_tokens:
+		# 	if w in self.word_vectors:
+		# 		count += 1
+		# 		if total_vector is None:
+		# 			total_vector = self.word_vectors[w]
+		# 		else:
+		# 			total_vector += self.word_vectors[w]
 
-		word_embding = coo_matrix(np.divide(total_vector, count))
+		# word_embding = coo_matrix(np.divide(total_vector, count))
 
 		feature_vect = hstack((word_features, char_features))
-		feature_vect = hstack((feature_vect, word_embding))
+		#feature_vect = hstack((feature_vect, word_embding))
 
 		return feature_vect
 
