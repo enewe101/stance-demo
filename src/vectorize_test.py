@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import twokenize
 from scipy.sparse import coo_matrix
 from scipy.sparse import csr_matrix
 from scipy.sparse import hstack
@@ -7,7 +8,7 @@ from unigram_dictonary import UnigramDictionary
 from gensim.models import Word2Vec
 from gensim.models.keyedvectors import KeyedVectors
 
-#TODO: Tokenize tweets, build the dictionaries and train the word2vec model
+#TODO: build the dictionaries and train the word2vec model
 
 class Vectorizer(object):
 	def __init__(
@@ -23,8 +24,13 @@ class Vectorizer(object):
 		"""
 		Returns the feature vector for a given text
 		"""
-		word_tokens = []
-		char_tokens = []
+		word_tokens = twokenize.tokenize(text)
+		char_tokens = list(text)
+
+		#Don't do anything if the necessary data isnt there
+		if self.char_ngram or self.word_ngram or self.word_vectors is None:
+			print("Missing dictionary or word embeddings")
+			return
 
 		word_features = find_ngram_ft_vec(word_tokens, self.word_ngram)
 		char_features = find_ngram_ft_vec(char_tokens, self.char_ngram)
