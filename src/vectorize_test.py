@@ -82,11 +82,12 @@ class Vectorizer(object):
 
 		return dct
 
-	def train_word2vec(self, domain_corpus, feature_length, sg=True, min_count=10, workers=5):
+	def train_word2vec(self, domain_corpus, feature_length, sg=1, min_count=5, workers=3):
 		"""
 		Trains the word2vec model on a corpus, by default using the skip-gram model
 		"""
-		model = Word2Vec(domain_corpus, min_count=min_count, sg=1, workers=workers)
+		tokenized = [ twokenize.tokenize(text) for text in domain_corpus ]
+		model = Word2Vec(tokenized, min_count=min_count, sg=1, workers=workers)
 		word_vectors = model.wv
 		del model
 		self.word_vectors = word_vectors
