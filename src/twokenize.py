@@ -119,9 +119,9 @@ def align(toks, orig):
 class AlignmentFailed(Exception): pass
 
 def unicodify(s, encoding='utf8', *args):
-  if isinstance(s,unicode): return s
+  if isinstance(s,str): return s
   if isinstance(s,str): return s.decode(encoding, *args)
-  return unicode(s)
+  return str(s)
 
 def tokenize(tweet):
   text = unicodify(tweet)
@@ -203,7 +203,7 @@ def unprotected_tokenize(s):
 
 if __name__=='__main__':
   for line in sys.stdin:
-    print u" ".join(tokenize(line[:-1])).encode('utf-8')
+    print(" ".join(tokenize(line[:-1])).encode('utf-8'))
     #print "CUR\t" + " ".join(tokenize(line[:-1]))
     #print "WS\t" + " ".join(line[:-1].split())
     #print ansi.color(line.strip(),'red')
