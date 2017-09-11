@@ -1,4 +1,5 @@
 import random
+from vectorize_test import Vectorizer
 import numpy as np
 
 VOCAB = {}
@@ -10,13 +11,16 @@ def vectorize(example):
     Place-holder implementation of vectorize; provides a unigram representation
     of the tweet example's text.
     """
-    tokens = [token.lower() for token in example['text'].split()]
-    for token in tokens:
-        if token not in VOCAB:
-            VOCAB[token] = len(VOCAB)
-    vec = np.zeros(MAX_VOCAB_SIZE, dtype='float32')
-    for token in tokens:
-        vec[VOCAB[token]] += 1
+    #tokens = [token.lower() for token in example['text'].split()]
+    #for token in tokens:
+    #    if token not in VOCAB:
+    #        VOCAB[token] = len(VOCAB)
+    #vec = np.zeros(MAX_VOCAB_SIZE, dtype='float32')
+    #for token in tokens:
+    #    vec[VOCAB[token]] += 1
+    vectorizer = Vectorizer()
+    vectorizer.load_dicts("../data/ngrams_data")
+    vec = vectorizer.vectorize(example["text"])
     return vec
 
 
