@@ -22,9 +22,9 @@ def vectorize(example):
 
 def train(labelled_vectors):
     """
-    The train function will take in a list of the form yielded by iter_vecs,
-    and will yield an object that implements the `predict` function, whose
-    interface is shown by `Model`.
+    The train function will take in a list of the form yielded by
+    `data.iter_vecs`, and will yield an object that implements the `predict`
+    function, whose interface is shown by `Model`.
     """
     return Model(labelled_vectors)
 

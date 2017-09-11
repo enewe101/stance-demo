@@ -46,13 +46,9 @@ def iter_vecs(include_train=True, include_test=False):
                 (feature_vector, target, stance)
     """
 
-    vectors = [
-        vectorize(example) 
-        for example in iter_raw(include_train, include_test)
-    ]
-
     return [
         (vectorize(example), example['target'], example['label'])
+        for example in iter_raw(include_train, include_test)
     ]
 
 
