@@ -4,7 +4,7 @@ import twokenize
 from scipy.sparse import coo_matrix
 from scipy.sparse import csr_matrix
 from scipy.sparse import hstack
-from unigram_dictonary import UnigramDictionary
+from unigram_dictionary import UnigramDictionary
 from gensim.models import Word2Vec
 from gensim.models.keyedvectors import KeyedVectors
 
@@ -12,6 +12,7 @@ from gensim.models.keyedvectors import KeyedVectors
 
 class Vectorizer(object):
 	def __init__(
+		self,
 		char_ngram=None,
 		word_ngram=None,
 		word_vectors=None
@@ -40,7 +41,7 @@ class Vectorizer(object):
 		for w in word_tokens:
 			if w in self.word_vectors:
 				count += 1
-				if total_vector = None:
+				if total_vector is None:
 					total_vector = self.word_vectors[w]
 				else:
 					total_vector += self.word_vectors[w]
@@ -72,7 +73,7 @@ class Vectorizer(object):
 			all_tokens = [ find_ngams(tokens, n) for n in which_grams ]
 
 			for n in all_tokens:
-				for token in :
+				for token in n:
 					dct.add(token)
 
 		if word:
