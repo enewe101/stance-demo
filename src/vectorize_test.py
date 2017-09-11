@@ -29,12 +29,15 @@ class Vectorizer(object):
 		char_tokens = list(text)
 
 		#Don't do anything if the necessary data isnt there
-		if self.char_ngram or self.word_ngram or self.word_vectors is None:
-			print("Missing dictionary or word embeddings")
+		if self.char_ngram is None:
+			print("Missing character n-grams")
+			return
+		if self.word_ngram is None:
+			print("Missing word n-grams")
 			return
 
 		word_features = find_ngram_ft_vec(word_tokens, self.word_ngram)
-		char_features = find_ngram_ft_vec(char_tokens, self.char_ngram)
+		char_features = find_ngram_ft_vec(char_tokens, self.char_ngram, which_grams = [2,3,4,5])
 
 		# total_vector = None
 		# count = 0
@@ -69,11 +72,16 @@ class Vectorizer(object):
 			which_grams = [2,3,4,5]
 
 		for text in corpus:
+			if word:
+				tokens = twokenize.tokenize(text)
+			else:
+				tokens = list(text)
+			
 			#list of tokens, each index is the zipped object of tokens for the given n
-			all_tokens = [ find_ngams(tokens, n) for n in which_grams ]
+			all_tokens = [ find_ngrams(tokens, n) for n in which_grams ]
 
-			for n in all_tokens:
-				for token in n:
+			for j in all_tokens:
+				for token in j:
 					dct.add(token)
 
 		if word:
@@ -93,13 +101,16 @@ class Vectorizer(object):
 		del model
 		self.word_vectors = word_vectors
 
+	def get_wordgrams(self):
+		return self.word_ngram
+
+	def get_chargrams(self):
+		return self.char_ngram	
+
 	def save_word2vec(self, fname):
 		"""
 		Saves the word vectors
 		"""
-		if not os.path.isdir(dir_name):
-			os.mkdir(dir_name)
-
 		self.word_vectors.save(fname)
 
 	def load_word2vec(self, fname):
@@ -115,18 +126,18 @@ class Vectorizer(object):
 		if not os.path.isdir(dir_name):
 			os.mkdir(dir_name)
 
-		self.char_ngram.save("{0}/{1}".format(fname, "char_ngram"))
-		self.word_ngram.save("{0}/{1}".format(fname, "word_ngram"))
+		self.char_ngram.save("{0}/{1}".format(dir_name, "char_ngram"))
+		self.word_ngram.save("{0}/{1}".format(dir_name, "word_ngram"))
 
 	def load_dicts(self, dir_name):
 		"""
 		Loads both ngrams, overwrites current data
 		"""
 		self.char_ngram = UnigramDictionary()
-		self.char_ngram.load("{0}/{1}".format(fname, "char_ngram"))
+		self.char_ngram.load("{0}/{1}".format(dir_name, "char_ngram"))
 
 		self.word_ngram = UnigramDictionary()
-		self.word_ngram.load("{0}/{1}".format(fname, "word_ngram"))
+		self.word_ngram.load("{0}/{1}".format(dir_name, "word_ngram"))
 
 def find_ngram_ft_vec(tokens, ngram_dict, which_grams=[1,2,3]):
 	"""
@@ -141,6 +152,7 @@ def find_ngram_ft_vec(tokens, ngram_dict, which_grams=[1,2,3]):
 
 	for n in all_tokens:
 		for token in n:
+			token = str(token).encode()
 			occ_vector[0, ngram_dict.get_id(token)] += 1
 
 	return occ_vector
@@ -149,7 +161,7 @@ def find_ngrams(tokens, n):
 	"""
 	Returns a zip object of the ngram tokens for a give list of tokens
 	"""
-	return zip(*[input_list[i:] for i in range(n)])
+	return zip(*[tokens[i:] for i in range(n)])
 
 
 

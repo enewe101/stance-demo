@@ -23,11 +23,11 @@ def iter_raw(include_train=True, include_test=False):
 
     if include_train:
         train_path = os.path.join(DATA_DIR, 'train.csv')
-        train_data = csv.DictReader(open(train_path, UNIVERSAL_NEWLINE_MODE))
+        train_data = csv.DictReader(open(train_path, UNIVERSAL_NEWLINE_MODE, encoding="ISO-8859-1"))
 
     if include_test:
         test_path = os.path.join(DATA_DIR, 'test.csv')
-        test_data = csv.DictReader(open(test_path, UNIVERSAL_NEWLINE_MODE))
+        test_data = csv.DictReader(open(test_path, UNIVERSAL_NEWLINE_MODE, encoding="ISO-8859-1"))
 
     return [
         {
