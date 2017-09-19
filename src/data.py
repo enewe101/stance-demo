@@ -1,13 +1,11 @@
 import os
 import csv
+import requests
 import itertools
 import numpy as np
 from interface_examples import vectorize
+from SETTINGS import DATA_DIR, TWEET_ENDPOINT
 
-
-DATA_DIR = os.path.abspath(
-    os.path.join(os.path.realpath(__file__), '../../data')
-)
 UNIVERSAL_NEWLINE_MODE = 'rU'
 VOCAB = {}
 MAX_VOCAB_SIZE = 100000
@@ -16,7 +14,7 @@ MAX_VOCAB_SIZE = 100000
 def iter_raw(include_train=True, include_test=False):
     """
     Yield the dataset (testing and/or training) in the form of an iterable of
-    tweet dicts, each having keys 'text', 'label' (i.e. stance), and 'target'.
+    tweet dicts, each having keys 'text', 'stance' (i.e. stance), and 'target'.
     """
 
     train_data, test_data = [], []
@@ -34,11 +32,30 @@ def iter_raw(include_train=True, include_test=False):
     return [
         {
             'text': example['Tweet'],
-            'label': example['Stance'],
+            'stance': convert_stance(example['Stance']),
             'target': example['Target']
         }
         for example in itertools.chain(train_data, test_data)
     ]
+
+
+def populate_database(endpoint=TWEET_ENDPOINT):
+    for tweet in iter_raw():
+        response = requests.post(TWEET_ENDPOINT, tweet)
+        response.raise_for_status()
+        print(response.text)
+
+
+
+def convert_stance(stance):
+    if stance == 'AGAINST':
+        return -1
+    elif stance == 'NONE':
+        return 0
+    elif stance == 'FAVOR':
+        return 1
+    else:
+        raise ValueError('Unexpected value for stance.')
 
 
 def corpus(include_train=True, include_test=False):
@@ -54,7 +71,7 @@ def iter_vecs(include_train=True, include_test=False):
     """
 
     return [
-        (vectorize(example), example['target'], example['label'])
+        (vectorize(example), example['target'], example['stance'])
         for example in iter_raw(include_train, include_test)
     ]
 

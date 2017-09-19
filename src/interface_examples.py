@@ -1,5 +1,6 @@
 import random
 from vectorize_test import Vectorizer
+from SETTINGS import NGRAMS_DIR
 import numpy as np
 
 VOCAB = {}
@@ -19,7 +20,7 @@ def vectorize(example):
     #for token in tokens:
     #    vec[VOCAB[token]] += 1
     vectorizer = Vectorizer()
-    vectorizer.load_dicts("../data/ngrams_data")
+    vectorizer.load_dicts(NGRAMS_DIR)
     vec = vectorizer.vectorize(example["text"])
     return vec
 
