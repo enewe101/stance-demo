@@ -16,9 +16,9 @@ def test_vectorize():
         try:
             assert isinstance(vec, expected_type), 'bad vectorize return type'
         except Exception:
-            print "vectorize: bad return type"
+            print("vectorize: bad return type")
             return
-    print 'vectorize OK'
+    print('vectorize OK')
 
 
 def test_train():
@@ -27,10 +27,10 @@ def test_train():
    try:
        assert isinstance(model.predict, types.MethodType), message
    except Exception:
-       print "train: bad train return type"
+       print("train: bad train return type")
        return
 
-   print 'train OK'
+   print('train OK')
 
 
 def test_predict():
@@ -41,16 +41,16 @@ def test_predict():
             prediction, confidence =  model.predict(test_example)
             assert prediction in {-1,0,1}, "predict: invalid prediction"
         except Exception:
-            print "predict: bad prediction return type"
+            print("predict: bad prediction return type")
             return
 
         try:
             assert confidence>0 and confidence<1, "predict: invalid confidence"
         except Exception:
-            print "predict: bad prediction return type"
+            print("predict: bad prediction return type")
             return
 
-    print 'predict OK'
+    print('predict OK')
    
 
 if __name__ == '__main__':

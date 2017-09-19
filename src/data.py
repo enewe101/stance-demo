@@ -23,11 +23,13 @@ def iter_raw(include_train=True, include_test=False):
 
     if include_train:
         train_path = os.path.join(DATA_DIR, 'train.csv')
-        train_data = csv.DictReader(open(train_path, UNIVERSAL_NEWLINE_MODE, encoding="ISO-8859-1"))
+        train_data = csv.DictReader(open(
+            train_path, UNIVERSAL_NEWLINE_MODE, encoding="ISO-8859-1"))
 
     if include_test:
         test_path = os.path.join(DATA_DIR, 'test.csv')
-        test_data = csv.DictReader(open(test_path, UNIVERSAL_NEWLINE_MODE, encoding="ISO-8859-1"))
+        test_data = csv.DictReader(open(
+            test_path, UNIVERSAL_NEWLINE_MODE, encoding="ISO-8859-1"))
 
     return [
         {
@@ -37,6 +39,11 @@ def iter_raw(include_train=True, include_test=False):
         }
         for example in itertools.chain(train_data, test_data)
     ]
+
+
+def corpus(include_train=True, include_test=False):
+    for tweet in iter_raw(include_train, include_test):
+        yield tweet['text']
 
 
 def iter_vecs(include_train=True, include_test=False):
