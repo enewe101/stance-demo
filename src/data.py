@@ -46,7 +46,6 @@ def populate_database(endpoint=TWEET_ENDPOINT):
         print(response.text)
 
 
-
 def convert_stance(stance):
     if stance == 'AGAINST':
         return -1
