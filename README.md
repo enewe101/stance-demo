@@ -4,4 +4,4 @@ Steps to start developping.  Starting from the src dir, do this:
 	cd src
     echo DATA_DIR = "'"`pwd`/data"'" | cat - SETTINGS.py.template > \
         SETTINGS.py
-    python vectorize_test.py
+    python prepare_vectorizer.py
