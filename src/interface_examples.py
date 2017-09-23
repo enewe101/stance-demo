@@ -6,6 +6,9 @@ import numpy as np
 VOCAB = {}
 MAX_VOCAB_SIZE = 100000
 
+vectorizer = Vectorizer()
+vectorizer.load_dicts(NGRAMS_DIR)
+ 
 
 def vectorize(example):
     """
@@ -19,8 +22,6 @@ def vectorize(example):
     #vec = np.zeros(MAX_VOCAB_SIZE, dtype='float32')
     #for token in tokens:
     #    vec[VOCAB[token]] += 1
-    vectorizer = Vectorizer()
-    vectorizer.load_dicts(NGRAMS_DIR)
     vec = vectorizer.vectorize(example["text"])
     return vec
 

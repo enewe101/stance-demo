@@ -10,6 +10,13 @@ UNIVERSAL_NEWLINE_MODE = 'rU'
 VOCAB = {}
 MAX_VOCAB_SIZE = 100000
 
+targets = {
+        'Atheism':0,
+        'Climate Change is a Real Concern': 1,
+        'Feminist Movement': 2,
+        'Hillary Clinton' : 3,
+        'Legalization of Abortion': 4
+}
 
 def iter_raw(include_train=True, include_test=False):
     """
@@ -20,14 +27,18 @@ def iter_raw(include_train=True, include_test=False):
     train_data, test_data = [], []
 
     if include_train:
+        print('starting to read')
         train_path = os.path.join(DATA_DIR, 'train.csv')
         train_data = csv.DictReader(open(
             train_path, UNIVERSAL_NEWLINE_MODE, encoding="ISO-8859-1"))
+        print('reading complete')
 
     if include_test:
+        print("starting to read test")
         test_path = os.path.join(DATA_DIR, 'test.csv')
         test_data = csv.DictReader(open(
             test_path, UNIVERSAL_NEWLINE_MODE, encoding="ISO-8859-1"))
+        print("reading complete")
 
     return [
         {
@@ -56,6 +67,10 @@ def convert_stance(stance):
     else:
         raise ValueError('Unexpected value for stance.')
 
+def convert_target(target):
+    one_hot = np.zeros(len(targets))
+    one_hot[targets[target]] = 1
+    return one_hot
 
 def corpus(include_train=True, include_test=False):
     for tweet in iter_raw(include_train, include_test):
@@ -69,9 +84,14 @@ def iter_vecs(include_train=True, include_test=False):
                 (feature_vector, target, stance)
     """
 
-    return [
-        (vectorize(example), example['target'], example['stance'])
-        for example in iter_raw(include_train, include_test)
-    ]
+    vecs = []
+    ct = 0
+    for example in iter_raw(include_train, include_test):
+        vecs.append(
+            (vectorize(example), convert_target(example['target']), example['stance'])
+        )
+        ct += 1
+        print('done %d' % ct)
+    return vecs
 
 
