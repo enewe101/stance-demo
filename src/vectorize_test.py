@@ -33,20 +33,23 @@ class Vectorizer(object):
         char_tokens = list(text)
 
         #Don't do anything if the necessary data isnt there
-        if self.char_ngram is None:
-            print("Missing character n-grams")
-            return
-        if self.word_ngram is None:
-            print("Missing word n-grams")
-            return
+        #if self.char_ngram is None:
+        #    print("Missing character n-grams")
+        #    return
+        #if self.word_ngram is None:
+        #    print("Missing word n-grams")
+        #    return
 
         if ngrams:         
             word_features = find_ngram_ft_vec(word_tokens, self.word_ngram)
             char_features = find_ngram_ft_vec(char_tokens, self.char_ngram, which_grams = [2,3,4,5])
 
         if embeddings:
-            local_w_vects = [ self.word_vectors[w] for w in word_tokens ]
-            word_embding = csr_matrix(np.mean(local_w_vects, axis=0))
+            local_w_vects = [ self.word_vectors[w] for w in word_tokens if w in self.word_vectors]
+            if local_w_vects == []:
+                word_embding = self.avg_embd
+            else:
+                word_embding = csr_matrix(np.mean(local_w_vects, axis=0))
 
         # total_vector = None
         # count = 0
@@ -153,8 +156,9 @@ class Vectorizer(object):
         Loads the word vectors.
         """
         model = Word2Vec.load_word2vec_format(fname, binary=True)
-
+        average_emb = np.mean( [ model[w] for w in model.vocab ], axis=0)
         self.word_vectors =model
+        self.avg_embd = average_emb
 
 
     def save_dicts(self, dir_name):
