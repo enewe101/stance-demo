@@ -4,8 +4,8 @@ import twokenize
 from scipy.sparse import coo_matrix
 from scipy.sparse import csr_matrix
 from scipy.sparse import hstack
-from gensim.models import Word2Vec
 from gensim.models.keyedvectors import KeyedVectors
+from word2vecReader import Word2Vec
 
 from unigram_dictionary import UnigramDictionary
 
@@ -25,7 +25,7 @@ class Vectorizer(object):
         self.word_vectors = word_vectors
 
 
-    def vectorize(self, text):
+    def vectorize(self, text, embeddings=True, ngrams=True):
         """
         Returns the feature vector for a given text
         """
@@ -40,9 +40,13 @@ class Vectorizer(object):
             print("Missing word n-grams")
             return
 
-        word_features = find_ngram_ft_vec(word_tokens, self.word_ngram)
-        char_features = find_ngram_ft_vec(
-            char_tokens, self.char_ngram, which_grams = [2,3,4,5])
+        if ngrams:         
+            word_features = find_ngram_ft_vec(word_tokens, self.word_ngram)
+            char_features = find_ngram_ft_vec(char_tokens, self.char_ngram, which_grams = [2,3,4,5])
+
+        if embeddings:
+            local_w_vects = [ self.word_vectors[w] for w in word_tokens ]
+            word_embding = csr_matrix(np.mean(local_w_vects, axis=0))
 
         # total_vector = None
         # count = 0
@@ -56,7 +60,18 @@ class Vectorizer(object):
 
         # word_embding = coo_matrix(np.divide(total_vector, count))
 
-        feature_vect = hstack((word_features, char_features))
+        if embeddings and ngrams:
+            feature_vect = hstack((word_features, char_features))
+            feature_vect = hstack((feature_vect, word_embding))
+
+        elif embeddings:
+            feature_vect = word_embding
+
+        elif ngrams:
+            feature_vect = hstack((word_features, char_features))
+
+        else:
+            print("Do you not want anything?")
         #feature_vect = hstack((feature_vect, word_embding))
 
         return feature_vect
@@ -133,11 +148,13 @@ class Vectorizer(object):
         self.word_vectors.save(fname)
 
 
-    def load_word2vec(self, fname):
+    def load_word2vec(self, fname="../data/word2vec_twitter_model/word2vec_twitter_model.bin"):
         """
         Loads the word vectors.
         """
-        self.word_vectors = KeyedVectors.load(fname)
+        model = Word2Vec.load_word2vec_format(fname, binary=True)
+
+        self.word_vectors =model
 
 
     def save_dicts(self, dir_name):
