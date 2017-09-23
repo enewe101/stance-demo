@@ -10,7 +10,7 @@ from sklearn.externals import joblib
 import numpy as np
 from sklearn.metrics import classification_report
 import logging
-.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 DUMB_MODEL = 'dumb_model.pkl'
 
