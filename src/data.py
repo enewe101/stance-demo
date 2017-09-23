@@ -87,11 +87,12 @@ def iter_vecs(include_train=True, include_test=False):
     vecs = []
     ct = 0
     for example in iter_raw(include_train, include_test):
-        vecs.append(
-            (vectorize(example), convert_target(example['target']), example['stance'])
-        )
-        ct += 1
-        print('done %d' % ct)
+        if example['target'] in targets:
+            vecs.append(
+                (vectorize(example), convert_target(example['target']), example['stance'])
+            )
+            ct += 1
+            print('done %d' % ct)
     return vecs
 
 

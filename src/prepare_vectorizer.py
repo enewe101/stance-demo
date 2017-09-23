@@ -7,8 +7,14 @@ from SETTINGS import NGRAMS_DIR
 
 def prepare_vectorizer():
     vectorizer = Vectorizer()
-    vectorizer.build_dict(corpus(), word=True)
-    vectorizer.build_dict(corpus(), word=False)
+    vectorizer.build_dict(corpus(include_train=True, include_test=True), word=True)
+    vectorizer.build_dict(corpus(include_train=True, include_test=True), word=False)
+    cw = vectorizer.get_chargrams()
+    print(len(cw)) 
+    #vectorizer.build_dict(corpus(include_train=False, include_test=True), word=True)
+    #vectorizer.build_dict(corpus(include_train=False, include_test=True), word=False) 
+    #cw = vectorizer.get_chargrams()
+    #print(len(cw))
     vectorizer.save_dicts(NGRAMS_DIR)
 
 
